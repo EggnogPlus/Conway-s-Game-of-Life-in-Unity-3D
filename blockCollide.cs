@@ -7,7 +7,7 @@ public class blockCollide : MonoBehaviour
     public bool isAlive = false;
     //public bool isAliveCollide = false;
     //public Color Color = Color.white;
-   private void OnCollisionEnter(Collision collision)
+    private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("thrownBlock"))
         {
@@ -32,6 +32,32 @@ public class blockCollide : MonoBehaviour
                 //gameObject.GetComponentInChildren<Transform>().tag = "Dead";
                 return;
             }
+        }
+
+    }
+
+    public void updateLocalState(bool state)
+    {
+        if (state == true)
+        {
+            GetComponent<MeshRenderer>().material.color = Color.blue;
+            isAlive = true;
+            //isAliveCollide = true;
+            gameObject.transform.tag = "Living";
+            gameObject.transform.Find("Overlap").tag = "Living";
+            return;
+
+        }
+
+        if (state != true)
+        {
+            GetComponent<MeshRenderer>().material.color = Color.white;
+            isAlive = false;
+            //isAliveCollide = false;
+            gameObject.transform.tag = "Dead";
+            gameObject.transform.Find("Overlap").tag = "Dead";
+            //gameObject.GetComponentInChildren<Transform>().tag = "Dead";
+            return;
         }
 
     }
