@@ -4,6 +4,15 @@ using UnityEngine;
 
 public class blockDetect : MonoBehaviour
 {
+
+    /*
+     * IMPORTANT ########################################################################################################################
+     * i have disabled use of this script on all gameobjects that had it, have moved this to grid creator script
+     * keeping it here for evidence and incase anything goes wrong
+     */
+
+
+
     Collider[] inZoneColliders;
     int numinColliders = 0;
     List<Transform> LiveCells = new List<Transform>();
@@ -78,7 +87,7 @@ public class blockDetect : MonoBehaviour
         */
         
         
-        if (Input.GetKeyDown(KeyCode.Q))
+        if (Input.GetKeyDown(KeyCode.Q)) //moved to grid creator
         {
             //numberColliderCheck();
             //SetCellState();
@@ -220,7 +229,7 @@ public class blockDetect : MonoBehaviour
     //    }
     //    */
     //}
-    private void numberColliderCheck()
+    private void numberColliderCheck() //old rules
     {
         //GameObject g = GetComponent<blockCollide>.isAlive;
 
@@ -256,12 +265,12 @@ public class blockDetect : MonoBehaviour
         
     }
 
-    private void OnDrawGizmos() //draws the overlap box for easier representation in scene
+    private void OnDrawGizmos() //draws the overlap box for easier representation in scene : not used anymore :p
     {
         Gizmos.DrawWireCube(transform.position, new Vector3(6.5f, 6.5f, 6.5f));
     }
 
-    private void SetCellState()
+    private void SetCellState() //old attempt at making an array for living and dead cells
     {
         for(int i = 0; i < LiveCells.Count; i++) {
             LiveCells[i].transform.GetComponentInParent<MeshRenderer>().material.color = Color.blue;

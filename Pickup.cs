@@ -15,7 +15,7 @@ public class Pickup : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.E)) //e to pickup
+        if (Input.GetKeyDown(KeyCode.E) && MyPauseMenu.GameIsPaused == false) //e to pickup and game is not paused
         {
             if (heldObj == null) //if not holding object
             {

@@ -13,7 +13,6 @@ public class GridCreator : MonoBehaviour
 
     GameObject gridCreator;
 
-    public int Ticks;
 
     [SerializeField] public int width;
     [SerializeField] public int height;
@@ -21,7 +20,7 @@ public class GridCreator : MonoBehaviour
 
 
 
-    private float gridSpacing = 5f;
+    //private float gridSpacing = 5f;
 
     [SerializeField] private GameObject blockPrefab;
     private GameObject[,] blockGrid;
@@ -58,41 +57,10 @@ public class GridCreator : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //bool decider = GetComponent<blockCollide>().isAlive;
-
-        /*
-        int x = 0;
-        int y = 0;
-        if (x < witdh)
-        {
-          numOfNeighbours[x, y] = numInColliders;
-          x++;
-        }
-        else
-        {
-          x = 0;
-          y++;
-         numOfNeighbours[x, y] = numInColliders
-        }
-        */
-        /*
-        int i = 0;
-        for (int y = 0; y < height; y++)
-        {
-            for (int x = 0; x < width; x++)
-            {
-                numOfNeighbours[x, y] = inZoneColliders[i];
-            }
-        }
-        i = 0;
-        */
-
-
         if (Input.GetKeyDown(KeyCode.Q))
         {
             numberColliderCheck();
             //SetCellState();
-            ++Ticks;
 
         }
         //numinColliders = 0;
@@ -103,9 +71,11 @@ public class GridCreator : MonoBehaviour
         //GameObject g = GetComponent<blockCollide>.isAlive;
 
 
-        int[,] ajacencyGrid = new int [height, width];
+        int[,] ajacencyGrid = new int [height, width]; //array to hold the current state of the grid to then later go through and make all changes to
 
-
+        //i know i keep getting my x and y's messed up, i do nested loops different each time aha, but yeah this does work and only ticks up when .isAlive is true,
+        //so no more messing with tags and overlap cubes, just checking each cube's state
+        //dx and dy stands for each cubes cordinates in the ajacency grid, since it's different for every cube
         for (int y = 0; y < height; y++)
         {
             for(int x = 0; x < width; x++)
@@ -141,19 +111,21 @@ public class GridCreator : MonoBehaviour
             {
                 Transform child = blockGrid[y, x].transform;
 
-                //Debug.LogFormat("Child: {0}, with adjacency {1}", child.gameObject.name, ajacencyGrid[y,x]); //checking detection : ONLY TURN ON WHEN NEEDED : creates a message for each cube, theres a lot of cubes
+                //Debug.LogFormat("Child: {0}, with adjacency {1}", child.gameObject.name, ajacencyGrid[y,x]); //checking detection : ONLY TURN ON WHEN NEEDED : creates a message for each cube, theres a lot of cubes...
 
                 if (child.tag == "Living")
                 {
                     //numinColliders += 1;
-                    if (ajacencyGrid[y,x] == 2 || ajacencyGrid[y,x] == 3)
+                    if (ajacencyGrid[y,x] == 2 || ajacencyGrid[y,x] == 3) //survive rule
                     {
                         //living cell
                         //LiveCells.Add(transform);
                         //child.gameObject.tag = "Living";
-                        child.GetComponent<blockCollide>().BroadcastMessage("updateLocalState", true);
+                        child.GetComponent<blockCollide>().BroadcastMessage("updateLocalState", true); //broadcast message gets past issue with using ints and variables in other script,
+                                                                                                       //acts as if it runs the on collide script that has no issues,
+                                                                                                       //with a true or false to determind what rules are implemented (dead or alive)
                     }
-                    else
+                    else //dies due to overpopulation or isolation
                     {
                         //dead cell
                         //DeadCells.Add(transform);
@@ -165,7 +137,7 @@ public class GridCreator : MonoBehaviour
                 }
                 else
                 {
-                    if (ajacencyGrid[y,x] == 3)
+                    if (ajacencyGrid[y,x] == 3) //birth rule
                     {
                         //living cell
                         //LiveCells.Add(transform);
@@ -173,7 +145,7 @@ public class GridCreator : MonoBehaviour
                         child.GetComponent<blockCollide>().BroadcastMessage("updateLocalState", true);
 
                     }
-                    else
+                    else //stays dead
                     {
                         //dead cell
                         //DeadCells.Add(transform);
@@ -212,9 +184,6 @@ public class GridCreator : MonoBehaviour
         //}
 
 
-
-
-
     }
 
     private void OnDrawGizmos() //draws the overlap box for easier representation in scene
@@ -222,7 +191,7 @@ public class GridCreator : MonoBehaviour
         Gizmos.DrawWireCube(transform.position, new Vector3(6.5f, 6.5f, 6.5f));
     }
 
-    private void SetCellState()
+    private void SetCellState() //not using currently : has 2 arrays which adds cordinates of cubes to, uses cordinates and whats in each array to do gol
     {
         for (int i = 0; i < LiveCells.Count; i++)
         {
