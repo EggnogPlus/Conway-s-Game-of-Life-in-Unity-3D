@@ -5,16 +5,20 @@ using UnityEngine.UI;
 
 public class customizeButton : MonoBehaviour
 {
-    public GameObject widthWindow;
-    public GameObject heightWindow;
+    public static bool GameIsCustomizing = false;
+    
+    public GameObject customizeWindowUI;
+    public GameObject inputWindow;
     public GameObject confirmButton;
+    
+
 
     public float clickRange = 5f;
     // Update is called once per frame
     void Update()
     {
 
-        if (Input.GetMouseButtonDown(0) && MyPauseMenu.GameIsPaused == false) //mouse1 to interact
+        if (Input.GetMouseButtonDown(0) && MyPauseMenu.GameIsPaused == false && customizeButton.GameIsCustomizing == false) //mouse1 to interact
         {
             RaycastHit hit;
             var ray = Camera.main.ScreenPointToRay(Input.mousePosition); //sends a ray out from center of screen
@@ -26,12 +30,15 @@ public class customizeButton : MonoBehaviour
                 {
                     Debug.Log("custom button clicked");
 
-                    widthWindow.SetActive(true);
-                    heightWindow.SetActive(true);
+                    //dont need to destory blocks here, already done                   
+
+                    GameIsCustomizing = true;
+
+                    customizeWindowUI.SetActive(true);
+                    inputWindow.SetActive(true);
                     confirmButton.SetActive(true);
-
+                    Time.timeScale = 0f;
                     
-
                 }
             }
 
@@ -39,11 +46,24 @@ public class customizeButton : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.F))
         {
-            widthWindow.SetActive(false);
-            heightWindow.SetActive(false);
+            customizeWindowUI.SetActive(false);
+            inputWindow.SetActive(false);
             confirmButton.SetActive(false);
+            Time.timeScale = 1f;
+
+            GameIsCustomizing = false;
         }
 
+    }//end update
+
+    public void CloseCustomize()
+    {
+        customizeWindowUI.SetActive(false);
+        inputWindow.SetActive(false);
+        confirmButton.SetActive(false);
+        Time.timeScale = 1f;
+
+        GameIsCustomizing = false;
     }
 
 

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GridCreator : MonoBehaviour
 {
@@ -13,11 +14,20 @@ public class GridCreator : MonoBehaviour
 
     GameObject gridCreator;
 
+    public static bool resetGrid = false;
 
-    [SerializeField] public int width;
-    [SerializeField] public int height;
+    public InputField userInput; //cant be static to be able to assign it to an object
+
+
+    //int userInt = int.Parse(userInput.text); //need to set it to an object of the theInput (inside canvas, InputUI, InputField)
+    public int userCustomizes;
+
+    /*[SerializeField]*/ public int width = 1;
+    /*[SerializeField]*/ public int height = 1;
     [SerializeField] private int depth;
 
+    //public int width = userInput;
+    //public int height = userInput;
 
 
     //private float gridSpacing = 5f;
@@ -25,12 +35,14 @@ public class GridCreator : MonoBehaviour
     [SerializeField] private GameObject blockPrefab;
     private GameObject[,] blockGrid;
 
+
     private void BrickBuild()
     {
+
         blockGrid = new GameObject[width, height];
         if(blockPrefab == null)
         {
-            Debug.LogError("FUUUUUUUU-");
+            Debug.LogError("Error with creating grid, null exception");
             return;
         }
         for (int y = 0; y < height; y++)
@@ -48,22 +60,66 @@ public class GridCreator : MonoBehaviour
 
     }
 
-    // Start is called before the first frame update
-    void Start()
+    public void DestroyBlocks()
     {
+        for (int y = 0; y < height; y++)
+        {
+            for (int x = 0; x < width; x++)
+            {
+                Destroy(blockGrid[x, y]);
+            }
+        }
+       //TicksText.Ticks = 0;
+    }
+
+    public void ConfirmAndBuild()
+    {
+
+        DestroyBlocks(); //destroy blocks first as i need to destroy the blocks
+                         //first and then set the new sizes of the grid or it Wont delete all blocks
+        userCustomizes = int.Parse(userInput.text);
+        width = userCustomizes;
+        height = userCustomizes;
+
+        resetGrid = true;
+
         BrickBuild();
+    }
+
+    
+    
+
+    // Start is called before the first frame update
+    void Start() //maybe instead of start check for grid size button click, also have to clear grid
+    {
+        MyPauseMenu.GameIsPaused = false;
+        customizeButton.GameIsCustomizing = false; //need to keep these to prevent permanent freezes inbetween game starts and stops
+        BrickBuild();
+        DestroyBlocks();
+
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Q))
+        
+        
+
+
+        if (Input.GetKeyDown(KeyCode.Q) /*|| Input.GetKey(KeyCode.Q)*/)
         {
             numberColliderCheck();
             //SetCellState();
-
         }
         //numinColliders = 0;
+
+        if (Input.GetKeyDown(KeyCode.N))
+        {
+            DestroyBlocks();
+            //SetCellState();
+
+        }
     }
 
     private void numberColliderCheck()
@@ -98,7 +154,7 @@ public class GridCreator : MonoBehaviour
                         }
                     }
                 }
-                ajacencyGrid[y,x] = numinColliders;
+                ajacencyGrid[y,x] = numinColliders; //saves state of surrounding cubes to the adajacency grid and the cube the has said surrounding cubes's x & y value
 
                 
 

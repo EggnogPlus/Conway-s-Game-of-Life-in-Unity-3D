@@ -12,7 +12,8 @@ public class TicksText : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-       
+        Ticks = 0;
+        tickText.text = Ticks.ToString();
     }
 
     // Update is called once per frame
@@ -26,5 +27,10 @@ public class TicksText : MonoBehaviour
             tickText.text = Ticks.ToString();
         }
 
+        if(GridCreator.resetGrid == true)
+        {
+            Ticks = 0;
+            GridCreator.resetGrid = false;
+        }
     }
 }
