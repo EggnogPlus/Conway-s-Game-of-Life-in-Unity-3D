@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class GridCreator : MonoBehaviour
 {
     Collider[] inZoneColliders;
-    
+
     List<Transform> LiveCells = new List<Transform>();
     List<Transform> DeadCells = new List<Transform>();
 
@@ -22,8 +22,10 @@ public class GridCreator : MonoBehaviour
     //int userInt = int.Parse(userInput.text); //need to set it to an object of the theInput (inside canvas, InputUI, InputField)
     public int userCustomizes;
 
-    /*[SerializeField]*/ public int width = 1;
-    /*[SerializeField]*/ public int height = 1;
+    /*[SerializeField]*/
+    public int width = 1;
+    /*[SerializeField]*/
+    public int height = 1;
     [SerializeField] private int depth;
 
     //public int width = userInput;
@@ -38,26 +40,35 @@ public class GridCreator : MonoBehaviour
 
     private void BrickBuild()
     {
-
-        blockGrid = new GameObject[width, height];
-        if(blockPrefab == null)
+        if (width >= 1) //cant be negative or above 100
         {
-            Debug.LogError("Error with creating grid, null exception");
-            return;
-        }
-        for (int y = 0; y < height; y++)
-        {
-            for (int x = 0; x < width; x++)
+            blockGrid = new GameObject[width, height];
+            if (blockPrefab == null)
             {
-                GameObject blockHolder = Instantiate(blockPrefab, new Vector3(x * 5, (height - y) * 5, depth), Quaternion.identity);
+                Debug.LogError("Error with creating grid, null exception");
+                return;
+            }
 
-                blockHolder.transform.SetParent(transform);
-                blockHolder.name = $"{y} - {x}";
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    GameObject blockHolder = Instantiate(blockPrefab, new Vector3(x * 5, (height - y) * 5, depth), Quaternion.identity);
 
-                blockGrid[y, x] = blockHolder;
+                    blockHolder.transform.SetParent(transform);
+                    blockHolder.name = $"{y} - {x}";
+
+                    blockGrid[y, x] = blockHolder;
+                }
             }
         }
-
+        else
+        {
+            Debug.Log("Incorrect Number - must be between 1-100");
+            //DestroyBlocks();
+            width = 0;
+            height = 0;
+        }
     }
 
     public void DestroyBlocks()
@@ -78,12 +89,17 @@ public class GridCreator : MonoBehaviour
         DestroyBlocks(); //destroy blocks first as i need to destroy the blocks
                          //first and then set the new sizes of the grid or it Wont delete all blocks
         userCustomizes = int.Parse(userInput.text);
-        width = userCustomizes;
-        height = userCustomizes;
+            width = userCustomizes;
+            height = userCustomizes;
+        
 
         resetGrid = true;
 
-        BrickBuild();
+        if(width >= 1)
+        {
+            BrickBuild();
+        }
+        
     }
 
     
