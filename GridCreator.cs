@@ -48,7 +48,8 @@ public class GridCreator : MonoBehaviour
                 Debug.LogError("Error with creating grid, null exception");
                 return;
             }
-
+            //i watched a tutorial to learn how to create a grid using nested loops, this nested loop below is the only one i copied from a tutorial but 
+            //after i watched that tutorial i learned how these actually work and have used it multiple times after without a tutorial
             for (int y = 0; y < height; y++)
             {
                 for (int x = 0; x < width; x++)
@@ -61,6 +62,7 @@ public class GridCreator : MonoBehaviour
                     blockGrid[y, x] = blockHolder;
                 }
             }
+            //where the copied nested loop ends
         }
         else
         {

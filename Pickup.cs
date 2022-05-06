@@ -19,6 +19,7 @@ public class Pickup : MonoBehaviour
         {
             if (heldObj == null) //if not holding object
             {
+                //this physics raycast hit is something i learned from a tutorial, but using that knowledge i used raycast to create my button click scripts without a tutorial
                 RaycastHit hit;
                 if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, pickUpRange))
                 {
@@ -35,16 +36,16 @@ public class Pickup : MonoBehaviour
         {
             MoveObject();
             
-            if(Input.GetMouseButtonDown(1))
+            if(Input.GetMouseButtonDown(1)) //i wrote this if statement
             {
                 heldObj.GetComponent<Rigidbody>().AddForce(holdParent.transform.forward * throwForce);
                 DropObject();
-                //this adds a throw force in teh direction of the object holder game object, so always throws forward from the holding point (allegedly)
+                //this adds a throw force in the direction of the object holder game object, so always throws forward from the holding point (allegedly)
             }
         }
     }
 
-    void MoveObject()
+    void MoveObject() //from tutorial
     {
         if (Vector3.Distance(heldObj.transform.position, holdParent.position) > 0.1f)
         {
@@ -53,7 +54,7 @@ public class Pickup : MonoBehaviour
         }
     }
 
-    void PickupObject(GameObject pickObj)
+    void PickupObject(GameObject pickObj) //from tutorial
     {
         if (pickObj.GetComponent<Rigidbody>())
         {
